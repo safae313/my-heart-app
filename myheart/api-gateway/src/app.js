@@ -13,43 +13,43 @@ app.use(morgan('dev'));
 
 // ==================== ROUTES ====================
 app.use('/api/auth', createProxyMiddleware({
-  target: 'http://auth-service:3001',
+  target: 'http://localhost:3001',
   changeOrigin: true,
   pathRewrite: { '^/api/auth': '' }
 }));
 
 app.use('/api/rendezvous', createProxyMiddleware({
-  target: 'http://rendez-vous-service:3002',
+  target: 'http://localhost:3002',
   changeOrigin: true,
   pathRewrite: { '^/api/rendezvous': '' }
 }));
 
 app.use('/api/dossier', createProxyMiddleware({
-  target: 'http://dossier-service:3003',
+  target: 'http://localhost:3003',
   changeOrigin: true,
   pathRewrite: { '^/api/dossier': '' }
 }));
 
 app.use('/api/ordonnance', createProxyMiddleware({
-  target: 'http://ordonnance-service:3004',
+  target: 'http://localhost:3004',
   changeOrigin: true,
   pathRewrite: { '^/api/ordonnance': '' }
 }));
 
 app.use('/api/analyse', createProxyMiddleware({
-  target: 'http://analyse-service:3005',
+  target: 'http://localhost:3005',
   changeOrigin: true,
   pathRewrite: { '^/api/analyse': '' }
 }));
 
 app.use('/api/paiement', createProxyMiddleware({
-  target: 'http://paiement-service:3007',
+  target: 'http://localhost:3007',
   changeOrigin: true,
   pathRewrite: { '^/api/paiement': '' }
 }));
 
 app.use('/api/administration', createProxyMiddleware({
-  target: 'http://administration-service:3010',
+  target: 'http://localhost:3010',
   changeOrigin: true,
   pathRewrite: { '^/api/administration': '' }
 }));
