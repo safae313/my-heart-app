@@ -5,7 +5,7 @@ const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const mongoose = require('mongoose');
 const dossierRoutes = require('./routes/dossierRoutes');
-
+const { registerToConsul } = require('./consul');
 const app = express();
 
 // middlewares globaux
@@ -45,6 +45,7 @@ mongoose.connect(process.env.MONGODB_URI, {
 })
     .then(() => {
         console.log('Connecté à MongoDB');
+        registerToConsul('dossier-service', 3003);
         app.listen(PORT, () => {
             console.log(`Serveur dossier-service démarré sur le port ${PORT}`);
         });

@@ -5,7 +5,7 @@ const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const { initializeDatabase } = require('./models/db');
 const ordonnanceRoutes = require('./routes/ordonnanceRoutes');
-
+const { registerToConsul } = require('./consul');
 const app = express();
 
 // middlewares globaux
@@ -42,6 +42,7 @@ const PORT = process.env.PORT || 3004;
 
 initializeDatabase()
     .then(() => {
+        registerToConsul('ordonnance-service', 3004);
         app.listen(PORT, () => {
             console.log(`🚀 Service Ordonnance démarré sur le port ${PORT}`);
         });

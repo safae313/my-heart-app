@@ -5,7 +5,7 @@ const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const { initializeDatabase } = require('./models/db');
 const adminRoutes = require('./routes/adminRoutes');
-
+const { registerToConsul } = require('./consul');
 const app = express();
 
 app.use(helmet());
@@ -31,6 +31,7 @@ const PORT = process.env.PORT || 3010;
 
 initializeDatabase()
     .then(()=>{
+        registerToConsul('administration-service', 3010);
         app.listen(PORT, ()=> console.log(`🚀 Administration service started on ${PORT}`));
     })
     .catch(err=>{ console.error('Unable to start service', err); process.exit(1); });

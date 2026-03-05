@@ -5,7 +5,7 @@ const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const { initializeDatabase } = require('./models/db');
 const paiementRoutes = require('./routes/paiementRoutes');
-
+const { registerToConsul } = require('./consul');
 const app = express();
 
 app.use(helmet());
@@ -30,6 +30,7 @@ const PORT = process.env.PORT || 3007;
 
 initializeDatabase()
     .then(()=>{
+        registerToConsul('paiement-service', 3007);
         app.listen(PORT, ()=>console.log(`🚀 Paiement service on ${PORT}`));
     })
     .catch(err=>{console.error('Cannot start', err); process.exit(1);});

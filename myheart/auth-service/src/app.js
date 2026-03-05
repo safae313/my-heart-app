@@ -5,7 +5,7 @@ require('dotenv').config();
 const sequelize = require('./config/database');
 const app = express();
 const authRoutes = require('./routes/auth.routes');
-
+const { registerToConsul } = require('./consul');
 // ─── MIDDLEWARES DE SÉCURITÉ ───
 app.use(helmet());
 app.use(cors());
@@ -33,6 +33,7 @@ const startServer = async () => {
     console.log('✅ Tables synchronisées');
 
     const PORT = process.env.PORT || 3001;
+    registerToConsul('auth-service', 3001);
     app.listen(PORT, () => {
       console.log(`✅ Auth Service démarré sur le port ${PORT}`);
     });

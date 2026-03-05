@@ -5,7 +5,7 @@ const cors = require('cors');
 const rateLimit = require('express-rate-limit');
 const { connectDB } = require('./models/db');
 const analyseRoutes = require('./routes/analyseRoutes');
-
+const { registerToConsul } = require('./consul');
 const app = express();
 
 app.use(helmet());
@@ -37,6 +37,7 @@ const PORT = process.env.PORT || 3005;
 
 connectDB()
     .then(() => {
+        registerToConsul('analyse-service', 3005);
         app.listen(PORT, () => {
             console.log(`🚀 Service Analyses démarré sur le port ${PORT}`);
         });

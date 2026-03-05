@@ -7,12 +7,12 @@ const express = require('express');
 const helmet = require('helmet');
 const cors = require('cors');
 const rateLimit = require('express-rate-limit');
-
+ 
 // 3. Ensuite les modules internes (qui peuvent utiliser process.env)
 const { initializeDatabase } = require('./models/db');
 const appointmentRoutes = require('./routes/appointmentRoutes');
 const { authenticateToken } = require('./middlewares/auth');
-
+const { registerToConsul } = require('./consul');
 // ==================== INITIALISATION ====================
 const app = express();
 
@@ -122,6 +122,7 @@ if (require.main === module) {
     // D'abord initialiser la BDD, puis démarrer le serveur
     initializeDatabase()
         .then(() => {
+            registerToConsul('rendez-vous-service', 3002);
             app.listen(PORT, () => {
                 console.log(`\n🚀 ===================================`);
                 console.log(`✅ Service Rendez-vous démarré avec succès !`);
