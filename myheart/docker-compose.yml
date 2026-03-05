@@ -1,0 +1,137 @@
+version: '3.8'
+
+services:
+
+  # ==================== BASES DE DONNÉES ====================
+  postgres:
+    image: postgres:15
+    container_name: myheart_postgres
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: safae
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - myheart_network
+
+  mongodb:
+    image: mongo:6
+    container_name: myheart_mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: safae
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - myheart_network
+
+  redis:
+    image: redis:7
+    container_name: myheart_redis
+    ports:
+      - "6379:6379"
+    networks:
+      - myheart_network
+
+  # ==================== MICROSERVICES ====================
+  auth-service:
+    build: ./auth-service
+    container_name: myheart_auth
+    ports:
+      - "3001:3001"
+    env_file:
+      - .env.example
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - myheart_network
+
+  rendez-vous-service:
+    build: ./rendez-vous-service
+    container_name: myheart_rendezvous
+    ports:
+      - "3002:3002"
+    env_file:
+      - .env.example
+    depends_on:
+      - postgres
+      - mongodb
+    networks:
+      - myheart_network
+
+  dossier-service:
+    build: ./dossier-service
+    container_name: myheart_dossier
+    ports:
+      - "3003:3003"
+    env_file:
+      - .env.example
+    depends_on:
+      - mongodb
+    networks:
+      - myheart_network
+
+  ordonnance-service:
+    build: ./ordonnance-service
+    container_name: myheart_ordonnance
+    ports:
+      - "3004:3004"
+    env_file:
+      - .env.example
+    depends_on:
+      - mongodb
+    networks:
+      - myheart_network
+
+  analyse-service:
+    build: ./analyse-service
+    container_name: myheart_analyse
+    ports:
+      - "3005:3005"
+    env_file:
+      - .env.example
+    depends_on:
+      - mongodb
+    networks:
+      - myheart_network
+
+  paiement-service:
+    build: ./paiement-service
+    container_name: myheart_paiement
+    ports:
+      - "3007:3007"
+    env_file:
+      - .env.example
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - myheart_network
+
+  administration-service:
+    build: ./administration-service
+    container_name: myheart_administration
+    ports:
+      - "3010:3010"
+    env_file:
+      - .env.example
+    depends_on:
+      - postgres
+      - mongodb
+    networks:
+      - myheart_network
+
+# ==================== VOLUMES ====================
+volumes:
+  postgres_data:
+  mongo_data:
+
+# ==================== NETWORK ====================
+networks:
+  myheart_network:
+    driver: bridge
